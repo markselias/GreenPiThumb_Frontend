@@ -4,7 +4,7 @@ import json_encoder
 
 
 def create(image_indexer, temperature_store, light_store, soil_moisture_store,
-           humidity_store):
+           humidity_store, soil_temperature_store, pump_state_store, window_state_store):
     """Creates a new GreenPiThumb flask app.
 
     Creates a GreenPiThumb app capable of servicing requests to the GreenPiThumb
@@ -16,6 +16,7 @@ def create(image_indexer, temperature_store, light_store, soil_moisture_store,
         light_store: Interface for retrieving light records.
         soil_moisture_store: Interface for retrieving soil moisture records.
         humidity_store: Interface for retrieving humidity records.
+        ...
 
     Returns:
         A Flask app that can serve HTTP requests.
@@ -38,6 +39,18 @@ def create(image_indexer, temperature_store, light_store, soil_moisture_store,
     @app.route('/humidityHistory.json')
     def humidity_history():
         return encoder.encode(humidity_store.get())
+
+    @app.route('/soilTemperatureHistory.json')
+    def soil_temperature_history():
+        return encoder.encode(soil_temperature_store.get())
+
+    @app.route('/pumpHistory.json')
+    def pump_history():
+        return encoder.encode(pump_state_store.get())
+
+    @app.route('/windowHistory.json')
+    def window_history():
+        return encoder.encode(window_state_store.get())
 
     @app.route('/images.json')
     def image_index():
